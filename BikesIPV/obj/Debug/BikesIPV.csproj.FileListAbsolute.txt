@@ -1,1 +1,17 @@
 C:\Users\Konstantin\Documents\GitHub\BikesIPV\BikesIPV\BikesIPV\bin\Debug\BikesIPV.exe.config
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\bin\Debug\BikesIPV.exe.config
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\bin\Debug\BikesIPV.exe
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\bin\Debug\BikesIPV.pdb
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\bin\Debug\Emgu.CV.dll
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\bin\Debug\Emgu.CV.UI.dll
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\bin\Debug\Emgu.Util.dll
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\bin\Debug\ZedGraph.dll
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\bin\Debug\Emgu.CV.xml
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\bin\Debug\Emgu.CV.UI.xml
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\bin\Debug\Emgu.Util.xml
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\obj\Debug\BikesIPV.csprojResolveAssemblyReference.cache
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\obj\Debug\BikesIPV.Form1.resources
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\obj\Debug\BikesIPV.Properties.Resources.resources
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\obj\Debug\BikesIPV.csproj.GenerateResource.Cache
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\obj\Debug\BikesIPV.exe
+C:\Users\preslav\Desktop\BikesIPV\BikesIPV\obj\Debug\BikesIPV.pdb
