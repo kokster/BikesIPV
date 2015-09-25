@@ -23,7 +23,7 @@ namespace BikesIPV
 
 
 
-            Image<Bgr, Byte> image = new Image<Bgr, byte>(@"C:\Users\preslav\Desktop\BikesIPV\BikesIPV\bin\Debug\bike2.jpg");
+            Image<Bgr, Byte> image = new Image<Bgr, byte>(BikesIPV.Properties.Resources.bike2);
 
             this.Width = image.Width;
             imageBox1.Width = image.Width;
@@ -51,7 +51,7 @@ namespace BikesIPV
 
 
 
-            imageBox1.Image = image;
+            imageBox1.Image = greyImage;
 
         }
 
