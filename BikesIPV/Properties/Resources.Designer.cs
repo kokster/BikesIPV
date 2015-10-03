@@ -63,6 +63,66 @@ namespace BikesIPV.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap bike_hard {
+            get {
+                object obj = ResourceManager.GetObject("bike_hard", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bike_normal_1 {
+            get {
+                object obj = ResourceManager.GetObject("bike_normal_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bike_normal_2 {
+            get {
+                object obj = ResourceManager.GetObject("bike_normal_2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bike_normal_3 {
+            get {
+                object obj = ResourceManager.GetObject("bike_normal_3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bike_white1 {
+            get {
+                object obj = ResourceManager.GetObject("bike_white1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bike_white2 {
+            get {
+                object obj = ResourceManager.GetObject("bike_white2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap bike1 {
             get {
                 object obj = ResourceManager.GetObject("bike1", resourceCulture);
@@ -76,6 +136,16 @@ namespace BikesIPV.Properties {
         internal static System.Drawing.Bitmap bike2 {
             get {
                 object obj = ResourceManager.GetObject("bike2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bike3 {
+            get {
+                object obj = ResourceManager.GetObject("bike3", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

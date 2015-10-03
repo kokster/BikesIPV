@@ -30,7 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             this.imageBox1 = new Emgu.CV.UI.ImageBox();
+            this.imageBox2 = new Emgu.CV.UI.ImageBox();
             ((System.ComponentModel.ISupportInitialize)(this.imageBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imageBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // imageBox1
@@ -41,16 +43,26 @@
             this.imageBox1.TabIndex = 2;
             this.imageBox1.TabStop = false;
             // 
+            // imageBox2
+            // 
+            this.imageBox2.Location = new System.Drawing.Point(930, 13);
+            this.imageBox2.Name = "imageBox2";
+            this.imageBox2.Size = new System.Drawing.Size(482, 355);
+            this.imageBox2.TabIndex = 2;
+            this.imageBox2.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(474, 423);
+            this.ClientSize = new System.Drawing.Size(1590, 526);
+            this.Controls.Add(this.imageBox2);
             this.Controls.Add(this.imageBox1);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.imageBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imageBox2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -58,6 +70,7 @@
         #endregion
 
         private Emgu.CV.UI.ImageBox imageBox1;
+        private Emgu.CV.UI.ImageBox imageBox2;
     }
 }
 

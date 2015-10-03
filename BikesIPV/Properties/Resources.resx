@@ -124,4 +124,25 @@
   <data name="bike2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\bin\Debug\bike2.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="bike3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bike3.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bike_hard" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bike_hard.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bike_normal_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bike_normal_1.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bike_normal_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bike_normal_2.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bike_normal_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bike_normal_3.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bike_white1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bike_white1.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bike_white2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bike_white2.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

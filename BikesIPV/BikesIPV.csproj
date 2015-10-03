@@ -95,6 +95,27 @@
   <ItemGroup>
     <None Include="bin\Debug\bike2.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bike3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bike_hard.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bike_normal_1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bike_normal_2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bike_normal_3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bike_white1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bike_white2.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

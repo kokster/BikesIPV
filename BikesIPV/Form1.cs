@@ -21,37 +21,32 @@ namespace BikesIPV
         {
             InitializeComponent();
 
+            BikeIPV bIPV= new BikeIPV();
 
-
-            Image<Bgr, Byte> image = new Image<Bgr, byte>(BikesIPV.Properties.Resources.bike2);
-
-            this.Width = image.Width;
-            imageBox1.Width = image.Width;
-            this.Height = image.Height;
-            imageBox1.Height = image.Height;
-
-            // First turn the color depth to 8bits
-            Image<Gray, Byte> greyImage;
-            greyImage = image.Convert<Gray, Byte>();
-
-            // Value for which the colour depth of each single pixel is taken into 
-            // consideration. (Now <= than 255 are taken into consideration)
-            Gray maxDepthColor = new Gray(255);
-
-            // Threshold value
-            Gray thresholdValue = new Gray(30);
-            // Blocksize of the chuncks getting check to determine
-            // average gray value each pixel.
-            int blocksize = 77;
-            // Apply the thresholding
-            greyImage = greyImage.ThresholdAdaptive(maxDepthColor ,  Emgu.CV.CvEnum.ADAPTIVE_THRESHOLD_TYPE.CV_ADAPTIVE_THRESH_GAUSSIAN_C, Emgu.CV.CvEnum.THRESH.CV_THRESH_BINARY_INV, blocksize , thresholdValue);
-            
+            // Dummy data
+            Image<Bgr, Byte> image = new Image<Bgr, byte>(BikesIPV.Properties.Resources.bike_white1);//.Resize(500, 400, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR, true );
+            Image<Gray, Byte> imageReady = bIPV.init(image, imageBox1);
+            imageBox1.Image = imageReady;
 
             
+          //  this.Width = bIPV.Width;
+            imageBox1.Width = bIPV.Width;
+          //  this.Height = bIPV.Height;
+            imageBox1.Height = bIPV.Height;
+           // this.Width = bIPV.Width;
+            imageBox2.Width = bIPV.Width;
+           // this.Height = bIPV.Height;
+            imageBox2.Height = bIPV.Height;
+
+
+            imageBox1.Image = bIPV.findWheels(imageReady);
+            imageBox2.Image = imageReady;
 
 
 
-            imageBox1.Image = greyImage;
+
+
+
 
         }
 
