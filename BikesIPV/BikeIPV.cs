@@ -67,11 +67,11 @@ namespace BikesIPV
             // The important parameters are 
             // Circle accumulator threshold
             double cannyThreshold = 200;
-            double circleAccumulatorThreshold = 200;
+            double circleAccumulatorThreshold =300;
             double resolutionOfAccumulator = 2.0;
-            double minDist = 20;
+            double minDist = 400;
             int minRadius = 50;
-            int maxRadius = 500;
+            int maxRadius = 300;
 
             
 
@@ -84,10 +84,10 @@ namespace BikesIPV
             // Since the wheels should be on the bottom part of the image,
             // then 1/4 of the picture height should be the maximum radius.
             maxRadius = rect.Height/2;
-            minRadius = rect.Width/ 10;
+           // minRadius = rect.Width/ 10;
 
 
-            int[] valuesToTest = new int[] { 10, 9, 8, 5, 3, 12 };
+            int[] valuesToTest = new int[] { 1, 2, 3, 4, 5, 6,7,8,9,10 };
 
 
             // The minimum radius is 
@@ -95,7 +95,7 @@ namespace BikesIPV
 
             foreach (int i in valuesToTest)
             {
-                minRadius = rect.Width / i;
+                circleAccumulatorThreshold = rect.Width / i;
                 circles.Add(imgToPro.HoughCircles(new Gray(cannyThreshold), new Gray(circleAccumulatorThreshold), resolutionOfAccumulator, minDist, minRadius, maxRadius)[0]);
                 Console.WriteLine("Hello");
             }
@@ -121,11 +121,63 @@ namespace BikesIPV
         }
 
 
+        //Find the difference between 2 pictures to be tried with BIKE PICTURES!!
+        public Image<Bgr,Byte> FindDifference(Image<Bgr, Byte> Frame, Image<Bgr,Byte> Previous_Frame)
+        {
+        Image<Bgr, Byte> Difference = null; //Difference between the two frames
+
+        double ContourThresh = 0.003; //stores alpha for thread access
+        int Threshold = 60; //stores threshold for thread access
+
+            if (Frame == null) //we need at least one fram to work out running average so acquire one before doing anything
+            {
+               
+                
+                
+                Previous_Frame = Frame.Copy(); //copy the frame to act as the previous
+
+            }
+            else
+            {
+               
+
+                Difference = Frame.AbsDiff(Previous_Frame); //find the absolute difference 
+                /*Play with the value 60 to set a threshold for movement*/
+                Difference = Difference.ThresholdBinary(new Bgr(Threshold, Threshold, Threshold), new Bgr(255, 255, 255)); //if value > 60 set to 255, 0 otherwise 
+                
+
+                Previous_Frame = Frame.Copy(); //copy the frame to act as the previous frame
+
+                #region Draw the contours of difference
+                //this is tasken from the ShapeDetection Example
+                using (MemStorage storage = new MemStorage()) //allocate storage for contour approximation
+                                                              //detect the contours and loop through each of them
+                    for (Contour<Point> contours = Difference.Convert<Gray, Byte>().FindContours(
+                          Emgu.CV.CvEnum.CHAIN_APPROX_METHOD.CV_CHAIN_APPROX_SIMPLE,
+                          Emgu.CV.CvEnum.RETR_TYPE.CV_RETR_LIST,
+                          storage);
+    contours != null;
+                       contours = contours.HNext)
+                    {
+                        //Create a contour for the current variable for us to work with
+                        Contour<Point> currentContour = contours.ApproxPoly(contours.Perimeter * 0.05, storage);
+
+                        //Draw the detected contour on the image
+                        if (currentContour.Area > ContourThresh) //only consider contours with area greater than 100 as default then take from form control
+                        {
+                            Frame.Draw(currentContour.BoundingRectangle, new Bgr(Color.Red), 2);
+                        }
+                    }
+                #endregion
+
+
+              
+            }
+            return Difference;
+
+
+        }
 
 
 
-    }
-
-
-
-}
+}}

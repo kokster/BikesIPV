@@ -116,6 +116,48 @@
   <ItemGroup>
     <None Include="Resources\bike_white2.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bike_white3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bike_white4.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bike_white5.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bike_white6.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bike_white7.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bike_white8.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Test_With.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Test_Without.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Test_With2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Test_Without2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Test_With3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Test_With4.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Test_Without3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Test_Without4.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
