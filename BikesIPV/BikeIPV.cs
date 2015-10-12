@@ -33,6 +33,7 @@ namespace BikesIPV
 
 
             Image<Gray, Byte> testImage = greyImage;
+            
             int thresholdValue = 25;
             int increaseStep = 5;
            
@@ -41,6 +42,10 @@ namespace BikesIPV
                 // Threshold value
 //                Gray thresholdGray = new Gray(5 + increaseStep);
               Gray thresholdGray = new Gray(35);
+
+            
+              
+            
 
             // Blocksize of the chuncks getting check to determine
             // average gray value each pixel.
@@ -73,8 +78,8 @@ namespace BikesIPV
             int minRadius = 50;
             int maxRadius = 300;
 
-            
 
+            imgToPro.SmoothGaussian(333);
             // Take 2 smaller pieces of the picture and test that on them
             Rectangle rect = new Rectangle(0, 0+(this.Height/3), this.Width, this.Height - this.Height/3 );
             imgToPro.ROI = rect;
@@ -87,30 +92,52 @@ namespace BikesIPV
            // minRadius = rect.Width/ 10;
 
 
-            int[] valuesToTest = new int[] { 1, 2, 3, 4, 5, 6,7,8,9,10 };
+            double[] valuesToTest = new double[] { 1,1.25,1.5,1.75, 2,2.5, 3, 4, 5, 6,7,8,9,10 };
 
 
             // The minimum radius is 
             List<CircleF[]> circles = new List<CircleF[]>();
+            List<PointF> centers = new List<PointF>();
 
             foreach (int i in valuesToTest)
             {
                 circleAccumulatorThreshold = rect.Width / i;
                 circles.Add(imgToPro.HoughCircles(new Gray(cannyThreshold), new Gray(circleAccumulatorThreshold), resolutionOfAccumulator, minDist, minRadius, maxRadius)[0]);
-                Console.WriteLine("Hello");
+                
+                Console.WriteLine(circles);
+                
             }
 
              
             //CircleF[] circles = imgToPro.HoughCircles(new Gray(125), new Gray(255),2,100,50,500)[0];
             Image<Gray, Byte> circleImage = imgToPro.CopyBlank();
-
-            for(int i = 0; i < circles.Count; i++)
+            for (int i = 0; i < circles.Count; i++)
             {
                 for(int z = 0; z < circles[i].Length; z++)
                 {
+                    PointF cpoint = circles[i][z].Center;
+                    centers.Add(cpoint);
+                    float rad = circles[i][z].Radius;
                     circleImage.Draw(circles[i][z], new Gray(255), 2);
+                    circleImage.Draw(new Rectangle((int)cpoint.X, (int)cpoint.Y, 1,1 ), new Gray(255), 10);
                     Console.WriteLine(circles[i][z]);
+                    
+
+
                 }
+            }
+            
+            if (centers.Count > 2)
+            {
+                float startX = centers[1].X;
+                float startY = centers[1].Y;
+                float endX = centers[2].X;
+                float endY = centers[2].Y;
+                Point start = new Point((int)startX, (int)startY);
+                Point end = new Point((int)endX, (int)endY);
+                circleImage.Draw(new LineSegment2DF(start, end),new Gray(255),2);
+                
+
             }
             
                 
@@ -178,6 +205,9 @@ namespace BikesIPV
 
         }
 
+        
 
 
-}}
+
+}
+}

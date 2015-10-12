@@ -23,8 +23,12 @@ namespace BikesIPV
 
             BikeIPV bIPV= new BikeIPV();
 
+            // TODO 
+            // Resize the picture .resize() 
+
+
             // Dummy data
-            Image<Bgr, Byte> image = new Image<Bgr, Byte>(BikesIPV.Properties.Resources.bike_white1);//.Resize(500, 400, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR, true );
+            Image<Bgr, Byte> image = new Image<Bgr, Byte>(BikesIPV.Properties.Resources.bike_white5);//.Resize(500, 400, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR, true );
             Image<Gray, Byte> imageReady = bIPV.init(image, imageBox1);
             imageBox1.Image = imageReady;
 
