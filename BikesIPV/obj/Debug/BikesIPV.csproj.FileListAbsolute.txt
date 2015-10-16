@@ -15,3 +15,15 @@ C:\Users\preslav\Desktop\BikesIPV\BikesIPV\obj\Debug\BikesIPV.Properties.Resourc
 C:\Users\preslav\Desktop\BikesIPV\BikesIPV\obj\Debug\BikesIPV.csproj.GenerateResource.Cache
 C:\Users\preslav\Desktop\BikesIPV\BikesIPV\obj\Debug\BikesIPV.exe
 C:\Users\preslav\Desktop\BikesIPV\BikesIPV\obj\Debug\BikesIPV.pdb
+C:\Users\Konstantin\Documents\GitHub\BikesIPV\BikesIPV\BikesIPV\obj\Debug\BikesIPV.exe
+C:\Users\Konstantin\Documents\GitHub\BikesIPV\BikesIPV\BikesIPV\obj\Debug\BikesIPV.pdb
+C:\Users\Konstantin\Documents\GitHub\BikesIPV\BikesIPV\BikesIPV\obj\Debug\BikesIPV.csprojResolveAssemblyReference.cache
+C:\Users\Konstantin\Documents\GitHub\BikesIPV\BikesIPV\BikesIPV\obj\Debug\BikesIPV.Form1.resources
+C:\Users\Konstantin\Documents\GitHub\BikesIPV\BikesIPV\BikesIPV\obj\Debug\BikesIPV.csproj.GenerateResource.Cache
+C:\Users\Konstantin\Documents\GitHub\BikesIPV\BikesIPV\BikesIPV\bin\Debug\BikesIPV.exe
+C:\Users\Konstantin\Documents\GitHub\BikesIPV\BikesIPV\BikesIPV\bin\Debug\BikesIPV.pdb
+C:\Users\Konstantin\Documents\GitHub\BikesIPV\BikesIPV\BikesIPV\bin\Debug\ZedGraph.dll
+C:\Users\Konstantin\Documents\GitHub\BikesIPV\BikesIPV\BikesIPV\bin\Debug\Emgu.CV.xml
+C:\Users\Konstantin\Documents\GitHub\BikesIPV\BikesIPV\BikesIPV\bin\Debug\Emgu.CV.UI.xml
+C:\Users\Konstantin\Documents\GitHub\BikesIPV\BikesIPV\BikesIPV\bin\Debug\Emgu.Util.xml
+C:\Users\Konstantin\Documents\GitHub\BikesIPV\BikesIPV\BikesIPV\obj\Debug\BikesIPV.Properties.Resources.resources

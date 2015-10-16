@@ -183,26 +183,6 @@ namespace BikesIPV.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bike1 {
-            get {
-                object obj = ResourceManager.GetObject("bike1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap bike2 {
-            get {
-                object obj = ResourceManager.GetObject("bike2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap bike3 {
             get {
                 object obj = ResourceManager.GetObject("bike3", resourceCulture);

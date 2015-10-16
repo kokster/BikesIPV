@@ -18,7 +18,14 @@ namespace BikesIPV
         // picture
         public int Width { get; set; }
         public int Height { get; set; }
-        
+
+        private bool crankLeft;
+
+
+        public BikeIPV(String value)
+        {
+            this.crankLeft = (value == "Right" ? false : true);
+        }
 
 
         public Image<Gray,Byte> init(Image<Bgr, Byte>  image, ImageBox imageBox1)
@@ -30,31 +37,18 @@ namespace BikesIPV
             // Value for which the colour depth of each single pixel is taken into 
             // consideration. (Now <= than 255 are taken into consideration)
             Gray maxDepthColor = new Gray(255);
-
-
             Image<Gray, Byte> testImage = greyImage;
-            
             int thresholdValue = 25;
             int increaseStep = 5;
-           
-            // TODO -> check the average color of the picture. 
-            //while ( increaseStep < 20 ) {
-                // Threshold value
-//                Gray thresholdGray = new Gray(5 + increaseStep);
+            // Threshold value
               Gray thresholdGray = new Gray(35);
-
-            
-              
-            
-
             // Blocksize of the chuncks getting check to determine
             // average gray value each pixel.
             int blocksize = 77;
-                // Apply the thresholding
-                testImage = greyImage.ThresholdAdaptive(maxDepthColor, Emgu.CV.CvEnum.ADAPTIVE_THRESHOLD_TYPE.CV_ADAPTIVE_THRESH_GAUSSIAN_C, Emgu.CV.CvEnum.THRESH.CV_THRESH_BINARY_INV, blocksize, thresholdGray);
-                // Get the height and assume the tyres are on the lower part
-                increaseStep += 5;
-           // }
+            // Apply the thresholding
+            testImage = greyImage.ThresholdAdaptive(maxDepthColor, Emgu.CV.CvEnum.ADAPTIVE_THRESHOLD_TYPE.CV_ADAPTIVE_THRESH_GAUSSIAN_C, Emgu.CV.CvEnum.THRESH.CV_THRESH_BINARY_INV, blocksize, thresholdGray);
+            // Get the height and assume the tyres are on the lower part
+            increaseStep += 5;
             
 
             int halfHeight = greyImage.Height / 2;
@@ -104,29 +98,37 @@ namespace BikesIPV
                 circleAccumulatorThreshold = rect.Width / i;
                 circles.Add(imgToPro.HoughCircles(new Gray(cannyThreshold), new Gray(circleAccumulatorThreshold), resolutionOfAccumulator, minDist, minRadius, maxRadius)[0]);
                 
-                Console.WriteLine(circles);
+                //Console.WriteLine(circles);
                 
             }
 
-             
-            //CircleF[] circles = imgToPro.HoughCircles(new Gray(125), new Gray(255),2,100,50,500)[0];
+
+            int radInt = 0;
+            // Draws point on the circles where the rays are
+            // We are working in a two dimensional array [][].
             Image<Gray, Byte> circleImage = imgToPro.CopyBlank();
+            Point centerOfWheel = new Point();
             for (int i = 0; i < circles.Count; i++)
             {
                 for(int z = 0; z < circles[i].Length; z++)
                 {
                     PointF cpoint = circles[i][z].Center;
+                    centerOfWheel.X = (int)cpoint.X;
+                    centerOfWheel.Y = (int)cpoint.Y;
                     centers.Add(cpoint);
                     float rad = circles[i][z].Radius;
+                    radInt = Convert.ToInt32(rad);
                     circleImage.Draw(circles[i][z], new Gray(255), 2);
                     circleImage.Draw(new Rectangle((int)cpoint.X, (int)cpoint.Y, 1,1 ), new Gray(255), 10);
+                   // circleImage.Draw(new Rectangle((int)cpoint.X, (int)cpoint.Y, 1,1));
                     Console.WriteLine(circles[i][z]);
-                    
-
-
                 }
             }
             
+
+            
+            
+            // Connect the two points
             if (centers.Count > 2)
             {
                 float startX = centers[1].X;
@@ -136,16 +138,28 @@ namespace BikesIPV
                 Point start = new Point((int)startX, (int)startY);
                 Point end = new Point((int)endX, (int)endY);
                 circleImage.Draw(new LineSegment2DF(start, end),new Gray(255),2);
-                
-
             }
-            
-                
-           // circleImage.Draw(rect, new Gray(255), 30);
 
-
+            // Draw the crank
+            detectCrank(circleImage, centerOfWheel, radInt * 2);
             return circleImage;
         }
+
+        
+        private void detectCrank(Image<Gray, Byte> imgToPro, Point wheelsCenter, int wheelDiameter)
+        {
+            int crankWidth = Convert.ToInt32((wheelDiameter - (0.1* wheelDiameter)));
+            int crankHeight = (int)crankWidth / 4;
+
+            // Assume the crank is on the left hand side
+            imgToPro.Draw(new Rectangle(wheelsCenter.X - wheelDiameter/10, wheelsCenter.Y - wheelDiameter / 10, crankWidth, crankHeight), new Gray(125), 1);
+            // Draw where the center of the crank is 
+            //imgToPro.Draw(new Rectangle(wheelsCenter.X - wheelDiameter / 10, wheelsCenter.Y - wheelDiameter / 10, 1, 1), new Gray(125), 1);
+            
+        }
+
+
+
 
 
         //Find the difference between 2 pictures to be tried with BIKE PICTURES!!
@@ -166,7 +180,6 @@ namespace BikesIPV
             }
             else
             {
-               
 
                 Difference = Frame.AbsDiff(Previous_Frame); //find the absolute difference 
                 /*Play with the value 60 to set a threshold for movement*/
@@ -183,7 +196,7 @@ namespace BikesIPV
                           Emgu.CV.CvEnum.CHAIN_APPROX_METHOD.CV_CHAIN_APPROX_SIMPLE,
                           Emgu.CV.CvEnum.RETR_TYPE.CV_RETR_LIST,
                           storage);
-    contours != null;
+                        contours != null;
                        contours = contours.HNext)
                     {
                         //Create a contour for the current variable for us to work with
