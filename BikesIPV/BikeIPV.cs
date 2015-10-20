@@ -143,6 +143,8 @@ namespace BikesIPV
             // Draw the crank
             detectCrank(circleImage, centerOfWheel, radInt * 2);
             return circleImage;
+            
+            
         }
 
         
@@ -153,9 +155,11 @@ namespace BikesIPV
 
             // Assume the crank is on the left hand side
             imgToPro.Draw(new Rectangle(wheelsCenter.X - wheelDiameter/10, wheelsCenter.Y - wheelDiameter / 10, crankWidth, crankHeight), new Gray(125), 1);
+            //Koko experiments with changing the - to +
+            //imgToPro.Draw(new Rectangle(wheelsCenter.X + wheelDiameter / 10, wheelsCenter.Y + wheelDiameter / 10, crankWidth, crankHeight), new Gray(125), 1);
             // Draw where the center of the crank is 
             //imgToPro.Draw(new Rectangle(wheelsCenter.X - wheelDiameter / 10, wheelsCenter.Y - wheelDiameter / 10, 1, 1), new Gray(125), 1);
-            
+
         }
 
 
