@@ -41,7 +41,7 @@ namespace BikesIPV
             int thresholdValue = 25;
             int increaseStep = 5;
             // Threshold value
-              Gray thresholdGray = new Gray(35);
+            Gray thresholdGray = new Gray(35);
             // Blocksize of the chuncks getting check to determine
             // average gray value each pixel.
             int blocksize = 77;
@@ -57,10 +57,11 @@ namespace BikesIPV
             this.Width = image.Width;
             this.Height = image.Height;
 
+            greyImage.Dispose();
             return testImage;
         }
 
-        public Image<Gray, Byte> findWheels(Image<Gray, Byte> imgToPro)
+        public Image<Gray, Byte> findWheels(Image<Gray, Byte> imgToPro, Image<Bgr,Byte> imgToDrawOn)
         { 
             // Detects the circles using the HoughCircles algorithm.
             // The important parameters are 
@@ -68,7 +69,7 @@ namespace BikesIPV
             double cannyThreshold = 200;
             double circleAccumulatorThreshold =300;
             double resolutionOfAccumulator = 2.0;
-            double minDist = 400;
+            double minDist = 300;
             int minRadius = 50;
             int maxRadius = 300;
 
@@ -77,6 +78,7 @@ namespace BikesIPV
             // Take 2 smaller pieces of the picture and test that on them
             Rectangle rect = new Rectangle(0, 0+(this.Height/3), this.Width, this.Height - this.Height/3 );
             imgToPro.ROI = rect;
+            imgToDrawOn.ROI = rect;
            // Type avg = imgToPro.GetAverage(imgToPro);
 
             // The following is done for the sake of speed.
@@ -93,15 +95,25 @@ namespace BikesIPV
             List<CircleF[]> circles = new List<CircleF[]>();
             List<PointF> centers = new List<PointF>();
 
-            foreach (int i in valuesToTest)
+            try
             {
-                circleAccumulatorThreshold = rect.Width / i;
-                circles.Add(imgToPro.HoughCircles(new Gray(cannyThreshold), new Gray(circleAccumulatorThreshold), resolutionOfAccumulator, minDist, minRadius, maxRadius)[0]);
+                foreach (int i in valuesToTest)
+                        {
+                            circleAccumulatorThreshold = rect.Width / i +1;
+                            circles.Add(imgToPro.HoughCircles(new Gray(cannyThreshold), new Gray(circleAccumulatorThreshold), resolutionOfAccumulator, minDist, minRadius, maxRadius)[0]);
+                   
+                            //Console.WriteLine(circles);
                 
-                //Console.WriteLine(circles);
-                
+                        }
             }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        
 
+
+            
 
             int radInt = 0;
             // Draws point on the circles where the rays are
@@ -113,13 +125,14 @@ namespace BikesIPV
                 for(int z = 0; z < circles[i].Length; z++)
                 {
                     PointF cpoint = circles[i][z].Center;
+                    
                     centerOfWheel.X = (int)cpoint.X;
                     centerOfWheel.Y = (int)cpoint.Y;
                     centers.Add(cpoint);
                     float rad = circles[i][z].Radius;
                     radInt = Convert.ToInt32(rad);
-                    circleImage.Draw(circles[i][z], new Gray(255), 2);
-                    circleImage.Draw(new Rectangle((int)cpoint.X, (int)cpoint.Y, 1,1 ), new Gray(255), 10);
+                    imgToDrawOn.Draw(circles[i][z], new Bgr(0,0,0), 2);
+                    imgToDrawOn.Draw(new Rectangle((int)cpoint.X, (int)cpoint.Y+Height/3, 1,1 ), new Bgr(0, 0, 0), 10);
                    // circleImage.Draw(new Rectangle((int)cpoint.X, (int)cpoint.Y, 1,1));
                     Console.WriteLine(circles[i][z]);
                 }
@@ -154,9 +167,7 @@ namespace BikesIPV
             int crankHeight = (int)crankWidth / 4;
 
             // Assume the crank is on the left hand side
-            imgToPro.Draw(new Rectangle(wheelsCenter.X - wheelDiameter/10, wheelsCenter.Y - wheelDiameter / 10, crankWidth, crankHeight), new Gray(125), 1);
-            //Koko experiments with changing the - to +
-            //imgToPro.Draw(new Rectangle(wheelsCenter.X + wheelDiameter / 10, wheelsCenter.Y + wheelDiameter / 10, crankWidth, crankHeight), new Gray(125), 1);
+            imgToPro.Draw(new Rectangle(wheelsCenter.X - wheelDiameter/10, wheelsCenter.Y - wheelDiameter / 10, crankWidth, crankHeight), new Gray(125),4);
             // Draw where the center of the crank is 
             //imgToPro.Draw(new Rectangle(wheelsCenter.X - wheelDiameter / 10, wheelsCenter.Y - wheelDiameter / 10, 1, 1), new Gray(125), 1);
 

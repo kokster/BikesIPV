@@ -18,13 +18,17 @@ namespace BikesIPV
 {
 
 
+    //MAKE ROI 3.5
+    //draw on transparrent panel
+    //Limit the number of times the method for calling the circles is called
 
     public partial class Form1 : Form
     {
         // Capture object 
         private Capture capture;
         private bool captureInProgress = false;
-
+        private int framecounter;
+        BikeIPV bIPV;
 
 
         public Form1()
@@ -34,6 +38,8 @@ namespace BikesIPV
             // comboBox2.Items.Add(RemoteMgr.ExposeProperty
             // comboBox2.Items.Add(Properties.Resources.ResourceManager.BaseName);
             getMeTheResources();
+            framecounter = 0;
+            bIPV = new BikeIPV("Left");
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -52,16 +58,15 @@ namespace BikesIPV
             {
                 Console.WriteLine(ev);
             }
-            BikeIPV bIPV = new BikeIPV(direction);
             // TODO 
             // Resize the picture .resize() 
             // Dummy data
             //Image<Bgr, Byte> image = new Image<Bgr, byte>(Application.StartupPath + @"\..\..\Resources" + selectedImg);
             //Image<Bgr, Byte> image = new Image<Bgr, Byte>(Properties.Resources.bike3);
             string imgPath = Application.StartupPath.Replace("bin\\Debug", "Resources") + "\\" + selectedImg;
-            Image<Bgr, Byte> image = new Image<Bgr, Byte>(@imgPath);//.Resize(400, 400, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR, true);
+            Image<Bgr, Byte> image = new Image<Bgr, Byte>(@imgPath).Resize(1024, 768, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR, true);
             
-            //.Resize(500, 400, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR, true );
+            //Resize(500, 400, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR, true );
             Image <Gray, Byte> imageReady = bIPV.init(image, imageBox1);
             imageBox1.Image = imageReady;
 
@@ -80,7 +85,7 @@ namespace BikesIPV
 
 
 
-            imageBox1.Image = bIPV.findWheels(imageReady);//.Resize(400, 400, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR, true) ;
+            imageBox1.Image = bIPV.findWheels(imageReady,image);//.Resize(400, 400, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR, true) ;
             imageBox2.Image = image; //Ready;
          
             //Image<Bgr, Byte> imageTest1 = new Image<Bgr, Byte>(BikesIPV.Properties.Resources.Test_With);
@@ -103,6 +108,16 @@ namespace BikesIPV
             {
                 comboBox2.Items.Add(Path.GetFileName(fileName));
             }
+        }
+
+
+        public void realTimeCircleFinder(Image<Bgr, Byte> imgFrame)
+        {
+
+            Image<Gray, Byte> grayImg = bIPV.init(imgFrame, imageBox2);
+            bIPV.findWheels(grayImg, imgFrame);
+            // Garbage collect
+            grayImg.Dispose();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -146,6 +161,16 @@ namespace BikesIPV
             //Image<Gray, Byte> grayFrame = 
             //ImageFrame[0, 20] = new Bgr(Color.Red);
             //createSquare(ImageFrame);
+            framecounter++;
+            //if (framecounter == 20)
+            //{
+                framecounter = 0;
+                realTimeCircleFinder(ImageFrame);
+            //}
+            ImageFrame.Dispose();
+
+            
+
         }
 
         private void button3_Click(object sender, EventArgs e)
