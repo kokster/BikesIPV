@@ -18,10 +18,8 @@ namespace BikesIPV
         // picture
         public int Width { get; set; }
         public int Height { get; set; }
-        //
         private bool crankLeft;
-        // 
-
+        
         // Last instance of the found bike
         private List<PointF> centers;
         private Point centerofwheel;
@@ -29,6 +27,12 @@ namespace BikesIPV
         private double distancebetweenwheels;
         private int radint;
         private double length;
+
+        // If the tutorial point is set, 
+        // then an line is going to show 
+        // where the repair can potentially 
+        // happen.
+        Point tutorialPoint;
 
 
 
@@ -97,7 +101,7 @@ namespace BikesIPV
         /// <param name="imgToDrawOn"></param>
         /// <param name="isRealTime"></param>
         /// <returns></returns>
-        public Image<Gray, Byte> findWheels(Image<Gray, Byte> imgToPro, Image<Bgr,Byte> imgToDrawOn,bool isRealTime)
+        public Image<Gray, Byte> process(Image<Gray, Byte> imgToPro, Image<Bgr,Byte> imgToDrawOn,bool isRealTime)
         { 
             // Detects the circles using the HoughCircles algorithm.
             // The important parameters are 
@@ -194,7 +198,6 @@ namespace BikesIPV
                 }
                 else
                 {
-
                     // draw the new found bike
                     if (isBikeFound(length, imgToPro))
                     {
@@ -219,6 +222,12 @@ namespace BikesIPV
                     circleImage = drawEverything(centers, imgToPro, centerOfWheel, imgToDrawOn, circlesList, length, radInt);
                 }
             }
+
+
+
+            // 
+
+
             
             
             return circleImage;
@@ -253,8 +262,16 @@ namespace BikesIPV
                     detectCrank(imgToDrawOn, centerOfWheel, radInt * 2);
                 }
             }
-
             return imgToPro;
+        }
+
+
+
+        private Image<Bgr,Byte> traceTutorialLine(Image<Bgr, Byte> imgToPro, Point start, Point endPoint)
+        {
+            imgToPro.Draw(new LineSegment2DF(start, endPoint), new Bgr(0,0,255), 2);
+            return imgToPro;
+
         }
 
        
@@ -326,14 +343,15 @@ namespace BikesIPV
             int crankHeight = (int)crankWidth / 4;
                 // Assume the crank is on the left hand side
                 imgToPro.Draw(new Rectangle(wheelsCenter.X - ( this.crankLeft ? 0 : crankWidth) , wheelsCenter.Y - wheelDiameter / 10 , crankWidth, Convert.ToInt32(crankHeight*1.5)), new Bgr(0,0,255), 4);
-                // Draw where the center of the crank is 
-                //imgToPro.Draw(new Rectangle(wheelsCenter.X - wheelDiameter / 10, wheelsCenter.Y - wheelDiameter / 10, 1, 1), new Gray(125), 1);
+           
             
+            // TODO -> fill the elemnts the user should be working in!     
+            //if (this.tutorialPoint == "crank")
+        //        imgToPro.Draw(new Rectangle(wheelsCenter.X - (this.crankLeft ? 0 : crankWidth), wheelsCenter.Y - wheelDiameter / 10, crankWidth, Convert.ToInt32(crankHeight * 1.5)), new Bgr(0, 0, 255), 4)
+            // Draw where the center of the crank is 
+            //imgToPro.Draw(new Rectangle(wheelsCenter.X - wheelDiameter / 10, wheelsCenter.Y - wheelDiameter / 10, 1, 1), new Gray(125), 1);
+
         }
-
-
-
-
 
         //Find the difference between 2 pictures to be tried with BIKE PICTURES!!
         // Test method: attempts to find the difference between two pictures. 
