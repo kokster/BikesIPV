@@ -18,16 +18,45 @@ namespace BikesIPV
         // picture
         public int Width { get; set; }
         public int Height { get; set; }
-
+        //
         private bool crankLeft;
+        // 
 
+        // Last instance of the found bike
+        private List<PointF> centers;
+        private Point centerofwheel;
+        private List<CircleF> circleslist;
+        private double distancebetweenwheels;
+        private int radint;
+        private double length;
+
+
+
+        public bool CrankLeft
+        {
+            get { return crankLeft; }
+        }
+
+        private int timer1 = 30;
+
+        public bool SetCrank(String value)
+        {
+            this.crankLeft = (value == "Right" ? false : true);
+            return this.crankLeft;
+        }
+       
 
         public BikeIPV(String value)
         {
-            this.crankLeft = (value == "Right" ? false : true);
+            SetCrank(value);
         }
 
-
+        /// <summary>
+        /// Initialize the class preferences
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="imageBox1"></param>
+        /// <returns></returns>
         public Image<Gray,Byte> init(Image<Bgr, Byte>  image, ImageBox imageBox1)
         {
             // First turn the color depth to 8bits
@@ -61,7 +90,14 @@ namespace BikesIPV
             return testImage;
         }
 
-        public Image<Gray, Byte> findWheels(Image<Gray, Byte> imgToPro, Image<Bgr,Byte> imgToDrawOn)
+        /// <summary>
+        /// Find the wheels and run the rest of code.
+        /// </summary>
+        /// <param name="imgToPro"></param>
+        /// <param name="imgToDrawOn"></param>
+        /// <param name="isRealTime"></param>
+        /// <returns></returns>
+        public Image<Gray, Byte> findWheels(Image<Gray, Byte> imgToPro, Image<Bgr,Byte> imgToDrawOn,bool isRealTime)
         { 
             // Detects the circles using the HoughCircles algorithm.
             // The important parameters are 
@@ -69,9 +105,14 @@ namespace BikesIPV
             double cannyThreshold = 200;
             double circleAccumulatorThreshold =300;
             double resolutionOfAccumulator = 2.0;
-            double minDist = 300;
-            int minRadius = 50;
+            double minDist = 500;//300;
+            int minRadius = 150;
             int maxRadius = 300;
+            timer1--;
+            if (isRealTime)
+            {
+                minRadius = 50;
+            }
 
 
             imgToPro.SmoothGaussian(333);
@@ -79,13 +120,14 @@ namespace BikesIPV
             Rectangle rect = new Rectangle(0, 0+(this.Height/3), this.Width, this.Height - this.Height/3 );
             imgToPro.ROI = rect;
             imgToDrawOn.ROI = rect;
-           // Type avg = imgToPro.GetAverage(imgToPro);
-
-            // The following is done for the sake of speed.
-            // Since the wheels should be on the bottom part of the image,
-            // then 1/4 of the picture height should be the maximum radius.
-            maxRadius = rect.Height/2;
-           // minRadius = rect.Width/ 10;
+            // Type avg = imgToPro.GetAverage(imgToPro);
+            
+                // The following is done for the sake of speed.
+                // Since the wheels should be on the bottom part of the image,
+                // then 1/4 of the picture height should be the maximum radius.
+                maxRadius = rect.Height / 2;
+                // minRadius = rect.Width/ 10;
+            
 
 
             double[] valuesToTest = new double[] { 1,1.25,1.5,1.75, 2,2.5, 3, 4, 5, 6,7,8,9,10 };
@@ -95,26 +137,16 @@ namespace BikesIPV
             List<CircleF[]> circles = new List<CircleF[]>();
             List<PointF> centers = new List<PointF>();
 
-            try
+            foreach (int i in valuesToTest)
             {
-                foreach (int i in valuesToTest)
-                        {
-                            circleAccumulatorThreshold = rect.Width / i +1;
-                            circles.Add(imgToPro.HoughCircles(new Gray(cannyThreshold), new Gray(circleAccumulatorThreshold), resolutionOfAccumulator, minDist, minRadius, maxRadius)[0]);
-                   
-                            //Console.WriteLine(circles);
-                
-                        }
+                circleAccumulatorThreshold = rect.Width / i +1;
+                circles.Add(imgToPro.HoughCircles(new Gray(cannyThreshold), new Gray(circleAccumulatorThreshold), resolutionOfAccumulator, minDist, minRadius, maxRadius)[0]);
+                //Console.WriteLine(circles);
             }
-            catch(Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-        
-
-
             
 
+
+            List<CircleF> circlesList = new List<CircleF>();
             int radInt = 0;
             // Draws point on the circles where the rays are
             // We are working in a two dimensional array [][].
@@ -124,53 +156,179 @@ namespace BikesIPV
             {
                 for(int z = 0; z < circles[i].Length; z++)
                 {
+                    circlesList.Add(circles[i][z]);
+                    //CircleF
                     PointF cpoint = circles[i][z].Center;
-                    
-                    centerOfWheel.X = (int)cpoint.X;
-                    centerOfWheel.Y = (int)cpoint.Y;
-                    centers.Add(cpoint);
-                    float rad = circles[i][z].Radius;
-                    radInt = Convert.ToInt32(rad);
-                    imgToDrawOn.Draw(circles[i][z], new Bgr(0,0,0), 2);
-                    imgToDrawOn.Draw(new Rectangle((int)cpoint.X, (int)cpoint.Y+Height/3, 1,1 ), new Bgr(0, 0, 0), 10);
-                   // circleImage.Draw(new Rectangle((int)cpoint.X, (int)cpoint.Y, 1,1));
-                    Console.WriteLine(circles[i][z]);
+                   centers.Add(cpoint);
+                   float rad = circles[i][z].Radius;
+                   radInt = Convert.ToInt32(rad);
+                    if (centers.Count > 2) break;
+                   // Console.WriteLine(circles[i][z]);
                 }
             }
-            
-
-            
-            
+            // Distance between the wheels
+            double length = 0;
             // Connect the two points
             if (centers.Count > 2)
             {
-                float startX = centers[1].X;
-                float startY = centers[1].Y;
-                float endX = centers[2].X;
-                float endY = centers[2].Y;
+                float startX = centers[0].X;
+                float startY = centers[0].Y;
+                float endX = centers[1].X;
+                float endY = centers[1].Y;
                 Point start = new Point((int)startX, (int)startY);
                 Point end = new Point((int)endX, (int)endY);
-                circleImage.Draw(new LineSegment2DF(start, end),new Gray(255),2);
+                length = new LineSegment2DF(start, end).Length;
+                
             }
+            if (isRealTime)
+            {
 
-            // Draw the crank
-            detectCrank(circleImage, centerOfWheel, radInt * 2);
+                // if the bike is found
+                if (timer1 > 0)
+                {
+                    // draw the last bike
+                    if (this.centers != null)
+                    {
+                        circleImage = drawEverything(this.centers, imgToPro, this.centerofwheel, imgToDrawOn, this.circleslist, this.length, radInt);
+                    }
+                }
+                else
+                {
+
+                    // draw the new found bike
+                    if (isBikeFound(length, imgToPro))
+                    {
+                        centerOfWheel = detectRightWheelCenter(centerOfWheel, centers, imgToPro);
+                        circleImage = drawEverything(centers, imgToPro, centerOfWheel, imgToDrawOn, circlesList, length, radInt);
+                        this.centers = centers;
+                        this.centerofwheel = centerOfWheel;
+                        this.circleslist = circlesList;
+                        this.radint = radInt;
+                        this.length = length;
+                        this.distancebetweenwheels = length;
+                        timer1 = 30;
+                    }
+                }
+            }
+            else
+            {
+                //Console.WriteLine("sadsadsa");
+                if (isBikeFound(length, imgToPro))
+                {
+                    centerOfWheel = detectRightWheelCenter(centerOfWheel, centers, imgToPro);
+                    circleImage = drawEverything(centers, imgToPro, centerOfWheel, imgToDrawOn, circlesList, length, radInt);
+                }
+            }
+            
+            
             return circleImage;
-            
-            
         }
 
-        
-        private void detectCrank(Image<Gray, Byte> imgToPro, Point wheelsCenter, int wheelDiameter)
+        /// <summary>
+        /// Draws on the image provided. 
+        /// It draws wheels, frame and crank.
+        /// </summary>
+        /// <param name="centers"></param>
+        /// <param name="imgToPro"></param>
+        /// <param name="centerOfWheel"></param>
+        /// <param name="imgToDrawOn"></param>
+        /// <param name="circlesList"></param>
+        /// <param name="distanceBetweenWheels"></param>
+        /// <param name="radInt"></param>
+        /// <returns></returns>
+        private Image<Gray, Byte> drawEverything(List<PointF> centers, Image<Gray, Byte> imgToPro, Point centerOfWheel, Image<Bgr, Byte> imgToDrawOn, List<CircleF> circlesList, double distanceBetweenWheels, int radInt)
+        {
+
+            for (int i = 0; i < centers.Count; i++)
+            {
+
+                if (isBikeFound(distanceBetweenWheels, imgToPro))
+                {
+                    
+                    PointF cpoint = centers[i];
+                    imgToDrawOn.Draw(circlesList[i], new Bgr(0, 0, 255), 2);
+                    imgToDrawOn.Draw(new Rectangle((int)cpoint.X, (int)cpoint.Y, 1, 1), new Bgr(0, 0, 0), 10);
+                    //OUTLINES THE TIRES WITH A RECTANGLE
+                    imgToDrawOn.Draw(new Rectangle((int)cpoint.X - radInt - 10, (int)cpoint.Y - radInt - 10, radInt * 2 + 10, radInt * 2 + 10), new Bgr(0, 0, 255), 5);
+                    detectCrank(imgToDrawOn, centerOfWheel, radInt * 2);
+                }
+            }
+
+            return imgToPro;
+        }
+
+       
+        /// <summary>
+        /// Final check to know whether the bike is found. It takes the distance of the two wheels
+        /// center to guess that. The distance should be greater than a given number. (in this case 
+        /// the width of the image is taken into consideration and divided by n) 
+        /// </summary>
+        /// <param name="length"></param>
+        /// <param name="imgToPro"></param>
+        /// <returns></returns>
+        private bool isBikeFound(double length,  Image<Gray, Byte> imgToPro)
+        {
+            if(length > (imgToPro.Width / 5))
+            {
+                
+                Console.WriteLine("found bike ");
+                return true;
+            }
+
+            return false;
+           
+        }
+
+        /// <summary>
+        /// It detects where the left or right wheel (based on the user preference) can be. 
+        //  It will do that based on the width of the image. One wheel should be on the left and 
+        //  the other one on the right hand side. 
+        /// </summary>
+        /// <param name="centerOfWheel"></param>
+        /// <param name="centers"></param>
+        /// <param name="imgToPro"></param>
+        /// <returns></returns>
+        private Point detectRightWheelCenter(Point centerOfWheel, List<PointF> centers, Image<Gray, Byte> imgToPro)
+        {
+
+            for (int i = 0; i < centers.Count; i++)
+            {
+                // crank is left
+                if (this.crankLeft)
+                {
+                    // get leftest point
+                    if (centers[i].X < imgToPro.Width / 2)
+                    {
+                        centerOfWheel.X = (int)centers[i].X;
+                        centerOfWheel.Y = (int)centers[i].Y;
+                        break;
+                    }
+
+                }
+                else
+                {
+                    // get rightest point
+                    if (centers[i].X > imgToPro.Width / 2)
+                    {
+                        centerOfWheel.X = (int)centers[i].X;
+                        centerOfWheel.Y = (int)centers[i].Y;
+                        break;
+                    }
+                }
+            }
+            return centerOfWheel;
+        }
+
+        // Tries to guess the crank being given the wheel diameter and their centers
+        private void detectCrank(Image<Bgr, Byte> imgToPro, Point wheelsCenter, int wheelDiameter)
         {
             int crankWidth = Convert.ToInt32((wheelDiameter - (0.1* wheelDiameter)));
             int crankHeight = (int)crankWidth / 4;
-
-            // Assume the crank is on the left hand side
-            imgToPro.Draw(new Rectangle(wheelsCenter.X - wheelDiameter/10, wheelsCenter.Y - wheelDiameter / 10, crankWidth, crankHeight), new Gray(125),4);
-            // Draw where the center of the crank is 
-            //imgToPro.Draw(new Rectangle(wheelsCenter.X - wheelDiameter / 10, wheelsCenter.Y - wheelDiameter / 10, 1, 1), new Gray(125), 1);
-
+                // Assume the crank is on the left hand side
+                imgToPro.Draw(new Rectangle(wheelsCenter.X - ( this.crankLeft ? 0 : crankWidth) , wheelsCenter.Y - wheelDiameter / 10 , crankWidth, Convert.ToInt32(crankHeight*1.5)), new Bgr(0,0,255), 4);
+                // Draw where the center of the crank is 
+                //imgToPro.Draw(new Rectangle(wheelsCenter.X - wheelDiameter / 10, wheelsCenter.Y - wheelDiameter / 10, 1, 1), new Gray(125), 1);
+            
         }
 
 
@@ -178,6 +336,7 @@ namespace BikesIPV
 
 
         //Find the difference between 2 pictures to be tried with BIKE PICTURES!!
+        // Test method: attempts to find the difference between two pictures. 
         public Image<Bgr,Byte> FindDifference(Image<Bgr, Byte> Frame, Image<Bgr,Byte> Previous_Frame)
         {
         Image<Bgr, Byte> Difference = null; //Difference between the two frames
@@ -232,10 +391,5 @@ namespace BikesIPV
 
 
         }
-
-        
-
-
-
 }
 }

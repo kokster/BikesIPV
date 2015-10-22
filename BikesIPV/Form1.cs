@@ -31,6 +31,7 @@ namespace BikesIPV
         BikeIPV bIPV;
 
 
+
         public Form1()
         {
             InitializeComponent();
@@ -49,15 +50,9 @@ namespace BikesIPV
 
             String direction = "Left";
             String selectedImg = comboBox2.SelectedItem.ToString();
-            try
-            {
-                direction = leftRightCombo.SelectedValue.ToString();
-                //selectedImg 
-            }
-            catch (NullReferenceException ev)
-            {
-                Console.WriteLine(ev);
-            }
+
+            
+            direction = leftRightCombo.SelectedItem.ToString();
             // TODO 
             // Resize the picture .resize() 
             // Dummy data
@@ -65,9 +60,12 @@ namespace BikesIPV
             //Image<Bgr, Byte> image = new Image<Bgr, Byte>(Properties.Resources.bike3);
             string imgPath = Application.StartupPath.Replace("bin\\Debug", "Resources") + "\\" + selectedImg;
             Image<Bgr, Byte> image = new Image<Bgr, Byte>(@imgPath).Resize(1024, 768, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR, true);
-            
+
+           
             //Resize(500, 400, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR, true );
+            bIPV.SetCrank(direction);
             Image <Gray, Byte> imageReady = bIPV.init(image, imageBox1);
+            
             imageBox1.Image = imageReady;
 
 
@@ -85,7 +83,7 @@ namespace BikesIPV
 
 
 
-            imageBox1.Image = bIPV.findWheels(imageReady,image);//.Resize(400, 400, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR, true) ;
+            imageBox1.Image = bIPV.findWheels(imageReady, image, false);//.Resize(400, 400, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR, true) ;
             imageBox2.Image = image; //Ready;
          
             //Image<Bgr, Byte> imageTest1 = new Image<Bgr, Byte>(BikesIPV.Properties.Resources.Test_With);
@@ -115,13 +113,15 @@ namespace BikesIPV
         {
 
             Image<Gray, Byte> grayImg = bIPV.init(imgFrame, imageBox2);
-            bIPV.findWheels(grayImg, imgFrame);
+            bIPV.findWheels(grayImg, imgFrame,true);
             // Garbage collect
             grayImg.Dispose();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            pictureBox1.Parent = imageBox1;
+            pictureBox1.BackColor = Color.Transparent;
             if (capture == null)
             {
                 try
@@ -207,6 +207,8 @@ namespace BikesIPV
                 imageBox1.Image = imageReady;
             }
         }
+
+        
     }
     }
 
