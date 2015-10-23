@@ -102,10 +102,11 @@ namespace BikesIPV
 
 
 
+           String repairSubject = "";
+            //repairSubject = problems.SelectedItem.ToString();
 
 
-
-            imageBox1.Image = bIPV.process(imageReady, image, false);//.Resize(400, 400, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR, true) ;
+            imageBox1.Image = bIPV.process(imageReady, image, false, repairSubject );//.Resize(400, 400, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR, true) ;
             imageBox2.Image = image; //Ready;
          
             //Image<Bgr, Byte> imageTest1 = new Image<Bgr, Byte>(BikesIPV.Properties.Resources.Test_With);
@@ -133,9 +134,12 @@ namespace BikesIPV
 
         public void realTimeCircleFinder(Image<Bgr, Byte> imgFrame)
         {
+            String repairSubject = "";
+
+            //repairSubject = problems.SelectedItem.ToString();
 
             Image<Gray, Byte> grayImg = bIPV.init(imgFrame, imageBox2);
-            bIPV.process(grayImg, imgFrame,true);
+            bIPV.process(grayImg, imgFrame,true, repairSubject );
             // Garbage collect
             grayImg.Dispose();
         }
@@ -238,11 +242,14 @@ namespace BikesIPV
 
         private void btn_help_Click(object sender, EventArgs e)
         {
+            Image<Bgr, Byte> image = (Image<Bgr, Byte>)imageBox2.Image;
             if (problems.Text == "Flat Front Tire")
             {
                 problemIndex = 0;
                 stepIndex = 0;
                 richTextBox1.Text = arrayProblems[problemIndex, stepIndex];
+                bIPV.highlightPartThatNeedsFixing(false, true, false, image);
+                imageBox2.Refresh();
                 pb_tutorial.Image = null;
 
             }
@@ -251,6 +258,8 @@ namespace BikesIPV
                 problemIndex = 1;
                 stepIndex = 0;
                 richTextBox1.Text = arrayProblems[problemIndex, stepIndex];
+                bIPV.highlightPartThatNeedsFixing(true, false, false, image);
+                imageBox2.Refresh();
                 pb_tutorial.Image = null;
             }
             else if (problems.Text == "Crank Replacement")
@@ -261,6 +270,10 @@ namespace BikesIPV
                 richTextBox1.Text = arrayProblems[problemIndex, stepIndex];
                 // pb_tutorial.Image = BikesIPV.Properties.Resources.
                 pb_tutorial.Load(@"..\..\Resources\RC1.jpg");
+                
+                bIPV.highlightPartThatNeedsFixing(false, false, true, image);
+                imageBox2.Refresh();
+                
             }
             btn_next.Enabled = true;
             

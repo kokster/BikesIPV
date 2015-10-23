@@ -27,13 +27,20 @@ namespace BikesIPV
         private double distancebetweenwheels;
         private int radint;
         private double length;
+        private Rectangle crank;
+        private List<Rectangle> wheelOutlines = new List<Rectangle>();
 
         // If the tutorial point is set, 
         // then an line is going to show 
         // where the repair can potentially 
         // happen.
         Point tutorialPoint;
-
+        
+        public Rectangle Crank
+        {
+            get { return crank; }
+            set { crank = value; }
+        }
 
 
         public bool CrankLeft
@@ -101,7 +108,7 @@ namespace BikesIPV
         /// <param name="imgToDrawOn"></param>
         /// <param name="isRealTime"></param>
         /// <returns></returns>
-        public Image<Gray, Byte> process(Image<Gray, Byte> imgToPro, Image<Bgr,Byte> imgToDrawOn,bool isRealTime)
+        public Image<Gray, Byte> process(Image<Gray, Byte> imgToPro, Image<Bgr,Byte> imgToDrawOn,bool isRealTime, String repairSubject)
         { 
             // Detects the circles using the HoughCircles algorithm.
             // The important parameters are 
@@ -210,6 +217,11 @@ namespace BikesIPV
                         this.length = length;
                         this.distancebetweenwheels = length;
                         timer1 = 30;
+
+                        // pass coloured image
+                        imgToDrawOn = highlightPartThatNeedsFixing(repairSubject , imgToDrawOn);
+
+
                     }
                 }
             }
@@ -220,6 +232,9 @@ namespace BikesIPV
                 {
                     centerOfWheel = detectRightWheelCenter(centerOfWheel, centers, imgToPro);
                     circleImage = drawEverything(centers, imgToPro, centerOfWheel, imgToDrawOn, circlesList, length, radInt);
+                    imgToDrawOn = highlightPartThatNeedsFixing(repairSubject, imgToDrawOn);
+
+
                 }
             }
 
@@ -258,11 +273,73 @@ namespace BikesIPV
                     imgToDrawOn.Draw(circlesList[i], new Bgr(0, 0, 255), 2);
                     imgToDrawOn.Draw(new Rectangle((int)cpoint.X, (int)cpoint.Y, 1, 1), new Bgr(0, 0, 0), 10);
                     //OUTLINES THE TIRES WITH A RECTANGLE
-                    imgToDrawOn.Draw(new Rectangle((int)cpoint.X - radInt - 10, (int)cpoint.Y - radInt - 10, radInt * 2 + 10, radInt * 2 + 10), new Bgr(0, 0, 255), 5);
+                    Rectangle rec;
+                    imgToDrawOn.Draw((rec = new Rectangle((int)cpoint.X - radInt - 10, (int)cpoint.Y - radInt - 10, radInt * 2 + 10, radInt * 2 + 10)), new Bgr(0, 0, 255), 5);
+                    wheelOutlines.Add(rec);
                     detectCrank(imgToDrawOn, centerOfWheel, radInt * 2);
                 }
             }
             return imgToPro;
+        }
+
+
+
+        private Image<Bgr,Byte> highlightPartThatNeedsFixing(String tutorialSubject, Image<Bgr, Byte>img)
+        {
+            if(tutorialSubject == "Flat Front Tire")
+            {
+                img = highlightPartThatNeedsFixing(true, false, false, img);
+
+            } else if (tutorialSubject == "Flat Back Tire")
+            {
+                img = highlightPartThatNeedsFixing(false, true, false, img);
+
+
+            } else
+            {
+                img = highlightPartThatNeedsFixing(false, false, true, img);
+            }
+
+            return img;
+        }
+
+
+        public Image<Bgr, Byte> highlightPartThatNeedsFixing(bool leftTire, bool rightTire, bool crank, Image<Bgr,Byte> img)
+        {
+            int leftestX = img.Width/2;
+            int rightestX = img.Width/2;
+            foreach (Rectangle rec in wheelOutlines)
+            {
+                if (rec.X<leftestX)
+                {
+                    leftestX = rec.X;
+                }
+                if (rec.X>rightestX)
+                {
+                    rightestX = rec.X;
+                }
+            }
+
+            if (leftTire)
+            {
+                img.Draw(new Rectangle(leftestX,wheelOutlines[0].Y,wheelOutlines[0].Width,wheelOutlines[0].Height), new Bgr(0, 255, 0), 8);
+            }
+            if (rightTire)
+            {
+                img.Draw(new Rectangle(rightestX, wheelOutlines[0].Y, wheelOutlines[0].Width, wheelOutlines[0].Height), new Bgr(0, 255, 0), 8);
+            }
+            if (crank)
+            {
+                int crankX = this.Crank.X;
+                int crankY = this.Crank.Y;
+                int crankWidth = this.Crank.Width;
+                int crankHeight = this.Crank.Height;
+                img.Draw(new Rectangle(crankX, crankY, crankWidth, crankHeight), new Bgr(0, 255, 0), 8);
+                
+                
+            }
+
+            return img;
         }
 
 
@@ -342,7 +419,7 @@ namespace BikesIPV
             int crankWidth = Convert.ToInt32((wheelDiameter - (0.1* wheelDiameter)));
             int crankHeight = (int)crankWidth / 4;
                 // Assume the crank is on the left hand side
-                imgToPro.Draw(new Rectangle(wheelsCenter.X - ( this.crankLeft ? 0 : crankWidth) , wheelsCenter.Y - wheelDiameter / 10 , crankWidth, Convert.ToInt32(crankHeight*1.5)), new Bgr(0,0,255), 4);
+                imgToPro.Draw(crank = new Rectangle(wheelsCenter.X - ( this.crankLeft ? 0 : crankWidth) , wheelsCenter.Y - wheelDiameter / 10 , crankWidth, Convert.ToInt32(crankHeight*1.5)), new Bgr(0,0,255), 4);
            
             
             // TODO -> fill the elemnts the user should be working in!     
